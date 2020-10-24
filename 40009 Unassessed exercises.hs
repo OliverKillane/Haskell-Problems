@@ -429,13 +429,25 @@ prefixes xs = (map fst $ allSplits xs) ++ [xs]
 
 -- Exercise 6:
 substrings :: Ord a => [a] -> [[a]]
-substrings xs = (map fst $ allSplits xs) ++ [xs] ++ (map fst $ allSplits $ reverse xs)
+substrings [] = []
+substrings all@(x:xs) = prefixes all ++ substrings xs
 
--- 
+-- Exercise 7:
+-- Using Heap's Algorithm
+perms :: [a] -> [[a]]
+perms [x] = [[x]]
+perms (x:xs) = concat [[take y pem ++ [x] ++ drop y pem | y <- [0..length pem]] | pem <- perms xs]
+
+-- Exercise 8:
+routes :: Int -> Int -> [(Int,Int)] -> [[Int]]
+routes start end routelist
+    | start == end = [[end]]
+    | otherwise = map (start:) $ concat [(routes inter end routelist) | (start', inter) <- routelist, start' == start]
+
 
 main::IO()
 main = do
-    print (substrings [1,2,3,4,5,6,7])
+    print (routes 1 6 [(1,2), (1,3), (2,4), (3,5), (5,6), (3,6)])
 
 
 
