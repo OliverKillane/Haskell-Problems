@@ -509,12 +509,15 @@ squash f (x:x':xs) = (f x x'):squash f xs
 converge :: (a -> a -> Bool) -> [a] -> a
 converge _ [x] = x
 converge f (x:x':xs)
-    | xs == [] = x'
+    | f x x' = x'
+    | otherwise = converge f (x':xs)
+
+
 
 -- For testing
 main::IO()
 main = do
-    print (squash (+) [1,1,2,2,3,3])
+    print (converge (==) [1,2,3,4,5,6,7])
     
 
 
