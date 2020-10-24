@@ -1,5 +1,5 @@
 -- Imports:
-import Data.Char ( isSpace )
+import Data.Char (chr, isSpace )
 import Data.List
 
 -- ==============================
@@ -444,14 +444,70 @@ routes start end routelist
     | start == end = [[end]]
     | otherwise = map (start:) $ concat [(routes inter end routelist) | (start', inter) <- routelist, start' == start]
 
+cyclicRoutes :: Int -> Int -> [(Int,Int)] -> [[Int]]
+cyclicRoutes start end routelist = cyclicRoutesHelper [] start end
+    where 
+        cyclicRoutesHelper :: [Int] -> Int -> Int -> [[Int]]
+        cyclicRoutesHelper prev start end
+            | start == end = [[end]]
+            | elem start prev = []
+            | otherwise = map (start:) $ concat [(cyclicRoutesHelper (start:prev) inter end) | (start', inter) <- routelist, start' == start]
 
+-- ==============================
+-- Section 4: Higher order functions
+-- ------------------------------
+
+-- Exercise 1:
+-- Part A:
+depunctuate :: String -> String
+depunctuate = filter (\x -> not $ elem x ".,:")
+
+-- Part B:
+makeString :: [Int] -> String
+makeString = map (chr)
+
+-- Part C:
+enpower :: [Int] -> Int
+enpower = foldr (^) 1
+
+-- Part D:
+revAll :: [[a]] -> [a]
+revAll = concatMap (reverse)
+
+-- Part E:
+rev' :: [a] -> [a]
+rev' = foldl (flip (:)) [] 
+
+-- Part F:
+dezip :: [(a,b)] -> ([a],[b])
+dezip zipped = (map (\(x,_) -> x) zipped, map (\(_,y) -> y) zipped)
+
+-- Exercise 2:
+allSame :: [Int] -> Bool
+allSame all@(l:list) = foldr (&&) True $ zipWith (==) (list ++ [l]) all
+
+-- Exercise 3:
+-- Part A:
+factorials :: [Integer]
+factorials = scanl (*) 1 [1..]
+
+-- Part B:
+-- Changed to first n elements for fun
+eBy :: Int -> Double
+eBy n = foldr (+) 0 $ map (\x -> 1 / fromIntegral(factorials!!x)  ) [0..n]
+
+-- Part C:
+-- It computes the bibonacci numbers! as thee a a recursion in the let statement.
+--let xs = 1 : scanl (+) 1 xs in xs
+
+-- Exercise 4:
+
+
+-- For testing
 main::IO()
 main = do
-    print (routes 1 6 [(1,2), (1,3), (2,4), (3,5), (5,6), (3,6)])
-
-
-
--- Exercise 3
+    print (eBy 70)
+    
 
 
 -- For running exercises:
@@ -561,4 +617,11 @@ main = do
 --      Exercise 12 
 --      Exercise 13 
 -- Section 3.2:
---      Exercise 1 
+--      Exercise 1  ✓
+--      Exercise 2  ✓
+--      Exercise 3  ✓
+--      Exercise 4  ✓
+--      Exercise 5  ✓
+--      Exercise 6  ✓
+--      Exercise 7  ✓
+--      Exercise 8  ✓
