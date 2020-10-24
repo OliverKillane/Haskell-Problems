@@ -501,12 +501,20 @@ eBy n = foldr (+) 0 $ map (\x -> 1 / fromIntegral(factorials!!x)  ) [0..n]
 --let xs = 1 : scanl (+) 1 xs in xs
 
 -- Exercise 4:
+squash :: (a -> a -> b) -> [a] -> [b]
+squash _ [] = []
+squash f (x:x':xs) = (f x x'):squash f xs
 
+-- Exercise 5:
+converge :: (a -> a -> Bool) -> [a] -> a
+converge _ [x] = x
+converge f (x:x':xs)
+    | xs == [] = x'
 
 -- For testing
 main::IO()
 main = do
-    print (eBy 70)
+    print (squash (+) [1,1,2,2,3,3])
     
 
 
